@@ -7,7 +7,7 @@ import (
   "os"
 )
 
-type StoreImages struct {
+type StoreImagesDir struct {
   images_uri   string       `json:"images_uri"`
   store_images []StoreImage `json:"store_images"`
 }
@@ -22,9 +22,13 @@ var current_dir = "."
 func handler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   w.Header().Set("Accept", "application/json")
-  json.NewEncoder(w).Encode(&photo)
-  fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
-  fmt.Fprintf(w, "Current directory: %s", current_dir)
+  si := StoreImage{image_uri: current_dir, image_type: "jpg"}
+  var sis [1]StoreImage
+  sis[1] = si
+  sisdir := {images_uri: r.URL.Path[1:], store_images: sis}
+  json.NewEncoder(w).Encode(&sisdir)
+  //fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
+  //fmt.Fprintf(w, "Current directory: %s", current_dir)
 }
 
 func main() {
