@@ -1,16 +1,30 @@
 package main
 
 import (
+  "encoding/json"
   "fmt"
   "net/http"
   "os"
 )
 
+type StoreImages struct {
+  images_uri   string       `json:"images_uri"`
+  store_images []StoreImage `json:"store_images"`
+}
+
+type StoreImage struct {
+  image_uri  string `json:"image_uri"`
+  image_type string `json:"image_type"`
+}
+
 var current_dir = "."
 
 func handler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintf(w, "Hello %s!", r.URL.Path[1:])
-  fmt.Fprintf(w, "Current directory is %s!", current_dir)
+  w.Header().Set("Content-Type", "application/json")
+  w.Header().Set("Accept", "application/json")
+  json.NewEncoder(w).Encode(&photo)
+  fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
+  fmt.Fprintf(w, "Current directory: %s", current_dir)
 }
 
 func main() {
