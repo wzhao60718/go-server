@@ -8,13 +8,13 @@ import (
 )
 
 type StoreImagesDir struct {
-	imagesURI   string       `json:"images_uri"`
-	storeImages []StoreImage `json:"store_images"`
+	ImagesURI   string       `json:"ImagesURI"`
+	StoreImages []StoreImage `json:"StoreImages"`
 }
 
 type StoreImage struct {
-	imageURI  string `json:"image_uri"`
-	imageType string `json:"image_type"`
+	ImageURI  string `json:"ImageURI"`
+	ImageType string `json:"ImageType"`
 }
 
 var currentDir = "."
@@ -23,11 +23,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
 	fmt.Fprintf(w, "Hello %s!", currentDir)
-	si := &StoreImage{imageURI: currentDir, imageType: "jpg"}
-	fmt.Fprintf(w, "---")
-	siJson, _ := json.Marshal(si)
-	fmt.Println(string(siJson))
-	fmt.Fprintf(w, "---")
+	si := StoreImage{ImageURI: currentDir, ImageType: "jpg"}
+	//fmt.Fprintf(w, "---")
+	//siJson, _ := json.Marshal(si)
+	//fmt.Println(w, string(siJson))
+	//fmt.Fprintf(w, "---")
 	json.NewEncoder(w).Encode(&si)
 	fmt.Fprintf(w, "End JSON StoreImage;;;")
 	//sis := []StoreImage{si}
