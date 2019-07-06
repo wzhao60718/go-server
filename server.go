@@ -24,7 +24,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Accept", "application/json")
 	si := StoreImage{imageURI: currentDir, imageType: "jpg"}
 	fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
-	json.NewEncoder(w).Encode(si)
+	json.NewEncoder(w).Encode(&si)
 	fmt.Fprintf(w, "<br />End JSON<br />")
 	sis := []StoreImage{si}
 	//sis[0] = si
