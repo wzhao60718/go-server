@@ -26,7 +26,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	sis := []StoreImage{si}
 	//sis[0] = si
 	sisdir := StoreImagesDir{imagesURI: r.URL.Path[1:], storeImages: sis}
-	json.NewEncoder(w).Encode(sisdir)
+	sisdirJson, _ := json.Marshal(sisdir)
+	json.NewEncoder(w).Encode(sisdirJson)
 	//fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
 	//fmt.Fprintf(w, "Current directory: %s", current_dir)
 }
