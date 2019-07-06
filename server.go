@@ -22,16 +22,16 @@ var currentDir = "."
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
-	si := StoreImage{imageURI: currentDir, imageType: "jpg"}
+	si := &StoreImage{imageURI: currentDir, imageType: "jpg"}
 	fmt.Fprintf(w, "Hello %s!", currentDir)
 	json.NewEncoder(w).Encode(&si)
 	fmt.Fprintf(w, "End JSON StoreImage;;;")
-	sis := []StoreImage{si}
+	//sis := []StoreImage{si}
 	//sis[0] = si
-	sisdir := StoreImagesDir{imagesURI: r.URL.Path[1:], storeImages: sis}
-	fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
-	json.NewEncoder(w).Encode(sisdir)
-	fmt.Fprintf(w, "End JSON StoreImagesDir;;;")
+	//sisdir := StoreImagesDir{imagesURI: r.URL.Path[1:], storeImages: sis}
+	//fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
+	//json.NewEncoder(w).Encode(sisdir)
+	//fmt.Fprintf(w, "End JSON StoreImagesDir;;;")
 	//sisdirJson, _ := json.Marshal(sisdir)
 	//fmt.Fprintf(w, string(sisdirJson))
 	//fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
