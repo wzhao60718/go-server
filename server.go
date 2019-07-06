@@ -38,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 	//fmt.Println(pwd)
-	current_dir = pwd
+	currentDir = pwd
 
 	http.HandleFunc("/", handler)
 	fmt.Println("Server running...")
