@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type PublicImages struct {
@@ -51,7 +52,7 @@ func GetPublicImages(imagesDir string) (*[]PublicImages, error) {
 			if piErr != nil {
 				panic(piErr)
 			}
-			pis := PublicImages{Dir: dir, Images: *pi}
+			pis := PublicImages{Dir: strings.Replace(dir, imagesDir+"/", "", -1), Images: *pi}
 			publicImages = append(publicImages, pis)
 		}
 		return nil
@@ -66,7 +67,9 @@ func GetPublicImage(imagesDir string) (*[]PublicImage, error) {
 	var publicImages []PublicImage
 	err := filepath.Walk(imagesDir, func(imageFile string, info os.FileInfo, err error) error {
 		if info.IsDir() == false {
-			pi := PublicImage{Image: imageFile, Type: "Image"}
+			imageFile = strings.Replace(imageFile, imagesDir+"/", "", -1)
+			imageFileToken := strings.Split(imageFile, ".")
+			pi := PublicImage{Image: imageFileToken[0], Type: imageFileToken[1]}
 			publicImages = append(publicImages, pi)
 		}
 		return nil
