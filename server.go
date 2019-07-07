@@ -5,49 +5,74 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
-type StoreImagesDir struct {
-	ImagesURI   string       `json:"ImagesURI"`
-	StoreImages []StoreImage `json:"StoreImages"`
+type PublicImages struct {
+	Dir    string        `json:"dir"`
+	Images []PublicImage `json:"images"`
 }
 
-type StoreImage struct {
-	ImageURI  string `json:"ImageURI"`
-	ImageType string `json:"ImageType"`
+type PublicImage struct {
+	Image string `json:"image"`
+	Type  string `json:"type"`
 }
-
-var currentDir = "."
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
-	fmt.Fprintf(w, "Hello %s!", currentDir)
-	si := StoreImage{ImageURI: currentDir, ImageType: "jpg"}
-	json.NewEncoder(w).Encode(&si)
-	fmt.Fprintf(w, "End JSON StoreImage;;;")
-	sis := []StoreImage{si}
-	//sis[0] = si
-	sisdir := StoreImagesDir{ImagesURI: r.URL.Path[1:], StoreImages: sis}
-	fmt.Fprintf(w, "Hello %s!", r.URL.Path[1:])
-	json.NewEncoder(w).Encode(sisdir)
-	fmt.Fprintf(w, "End JSON StoreImagesDir;;;")
-	//sisdirJson, _ := json.Marshal(sisdir)
-	//fmt.Fprintf(w, string(sisdirJson))
-	//fmt.Fprintf(w, "Hello %s!<br/>", r.URL.Path[1:])
-	//fmt.Fprintf(w, "Current directory: %s", current_dir)
-}
 
-func main() {
-	pwd, err := os.Getwd()
+	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	//fmt.Println(pwd)
-	currentDir = pwd
+	imagesDir := currentDir + "/images"
 
+	fmt.Fprintf(w, "Hello %s!", imagesDir)
+	publicImages, err := GetPublicImages(imagesDir)
+	if err != nil {
+		fmt.Fprintf(w, "Error JSON PublicImages;;;")
+	}
+	json.NewEncoder(w).Encode(publicImages)
+}
+
+func main() {
 	http.HandleFunc("/", handler)
 	fmt.Println("Server running...")
 	http.ListenAndServe(":8080", nil)
+}
+
+func GetPublicImages(imagesDir string) (*[]PublicImages, error) {
+	var publicImages []PublicImages
+	err := filepath.Walk(imagesDir, func(dir string, info os.FileInfo, err error) error {
+		if info.IsDir() && dir != imagesDir {
+			pi, piErr := GetPublicImage(dir)
+			if piErr != nil {
+				panic(piErr)
+			}
+			pis := PublicImages{Dir: dir, Images: *pi}
+			publicImages = append(publicImages, pis)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &publicImages, err
+}
+
+func GetPublicImage(imagesDir string) (*[]PublicImage, error) {
+	var publicImages []PublicImage
+	err := filepath.Walk(imagesDir, func(imageFile string, info os.FileInfo, err error) error {
+		if info.IsDir() == false {
+			pi := PublicImage{Image: imageFile, Type: "Image"}
+			publicImages = append(publicImages, pi)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &publicImages, err
 }
