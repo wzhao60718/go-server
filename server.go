@@ -32,10 +32,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	imagesDir := currentDir + "/images"
 
 	fmt.Fprintf(w, "Hello %s!", r.URL.Path[1:])
-	if strings.HasSuffix(r.URL.Path[1:], "/go") {
+	if r.URL.Path[1:] == "go" {
 		fmt.Fprintf(w, "Hello GO %s!", currentDir)
 	}
-	if strings.HasSuffix(r.URL.Path[1:], "/go/images") {
+	if r.URL.Path[1:] == "go/images" {
 		fmt.Fprintf(w, "Hello Images %s!", imagesDir)
 	}
 
