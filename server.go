@@ -31,13 +31,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	imagesDir := currentDir + "/images"
 
-	//if strings.HasSuffix(r.URL.Path[1:], "/go") {
-	fmt.Fprintf(w, "Hello %s!", currentDir)
-	fmt.Fprintf(w, "Hello Go %s!", r.URL.Path[1:])
-	//}
-	//if strings.HasSuffix(r.URL.Path[1:], "/go/images") {
-	fmt.Fprintf(w, "Hello Images %s!", imagesDir)
-	//}
+	fmt.Fprintf(w, "Hello %s!", r.URL.Path[1:])
+	if strings.HasSuffix(r.URL.Path[1:], "/go") {
+		fmt.Fprintf(w, "Hello GO %s!", currentDir)
+	}
+	if strings.HasSuffix(r.URL.Path[1:], "/go/images") {
+		fmt.Fprintf(w, "Hello Images %s!", imagesDir)
+	}
 
 	publicImages, err := GetPublicImages(imagesDir)
 	if err != nil {
