@@ -28,9 +28,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	imagesDir := currentDir + "/images"
 
-	fmt.Fprintf(w, "Hello %s!", imagesDir)
+	imagesDir := currentDir + "/images"
+	/*
+		if strings.HasSuffix(r.URL.Path[1:], "/go") {
+			fmt.Fprintf(w, "Hello JSON %s!", currentDir)
+		}
+		if strings.HasSuffix(r.URL.Path[1:], "/go/images") {
+			fmt.Fprintf(w, "Hello Images %s!", imagesDir)
+		}
+	*/
 	publicImages, err := GetPublicImages(imagesDir)
 	if err != nil {
 		fmt.Fprintf(w, "Error JSON PublicImages;;;")
