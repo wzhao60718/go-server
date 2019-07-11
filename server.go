@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -15,8 +16,9 @@ type PublicImages struct {
 }
 
 type PublicImage struct {
-	Image string `json:"image"`
-	Type  string `json:"type"`
+	Image     string `json:"image"`
+	Type      string `json:"type"`
+	Thumbnail string `json:"thumbnail"`
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -77,7 +79,7 @@ func GetPublicImage(imagesDir string) (*[]PublicImage, error) {
 		if info.IsDir() == false {
 			imageFile = strings.Replace(imageFile, imagesDir+"/", "", -1)
 			imageFileToken := strings.Split(imageFile, ".")
-			pi := PublicImage{Image: imageFileToken[0], Type: imageFileToken[1]}
+			pi := PublicImage{Image: imageFileToken[0], Type: imageFileToken[1], Thumbnail: ""}
 			publicImages = append(publicImages, pi)
 		}
 		return nil
@@ -85,5 +87,8 @@ func GetPublicImage(imagesDir string) (*[]PublicImage, error) {
 	if err != nil {
 		return nil, err
 	}
+	sort.Slice(publicImages[:], func(i, j int) bool {
+		return publicImages[i].Image < publicImages[j].Image
+	})
 	return &publicImages, err
 }
