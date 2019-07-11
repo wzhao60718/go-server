@@ -88,6 +88,9 @@ func GetPublicImage(imagesDir string) (*[]PublicImage, error) {
 		return nil, err
 	}
 	sort.Slice(publicImages[:], func(i, j int) bool {
+		if publicImages[i].Type != publicImages[j].Type {
+			return publicImages[i].Type < publicImages[j].Type
+		}
 		return publicImages[i].Image < publicImages[j].Image
 	})
 	return &publicImages, err
