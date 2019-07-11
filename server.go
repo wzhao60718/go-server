@@ -93,5 +93,26 @@ func GetPublicImage(imagesDir string) (*[]PublicImage, error) {
 		}
 		return publicImages[i].Image < publicImages[j].Image
 	})
+	for i, pi := range publicImages {
+		if i > 0 && publicImages[i-1].Image != "" {
+			thumbnail := ""
+			if pi.Image == publicImages[i-1].Image+"-0" {
+				thumbnail = "-0"
+			}
+			if pi.Image == publicImages[i-1].Image+"_0" {
+				thumbnail = "_0"
+			}
+			if thumbnail != "" {
+				publicImages[i-1].Thumbnail = thumbnail
+				publicImages[i].Image = ""
+			}
+		}
+	}
+	for i := 0; i < len(publicImages); i++ {
+		if publicImages[i].Image == "" {
+			publicImages = append(publicImages[:i], publicImages[i+1:]...)
+			i--
+		}
+	}
 	return &publicImages, err
 }
